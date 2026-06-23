@@ -1,11 +1,14 @@
 package org.yearup.service;
 
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.yearup.models.CartItem;
-import org.yearup.models.ShoppingCart;
+import org.yearup.exception.ProductNotFoundException;
+import org.yearup.models.*;
 import org.yearup.repository.ShoppingCartRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShoppingCartService
@@ -20,11 +23,49 @@ public class ShoppingCartService
         this.productService = productService;
     }
 
-    public ShoppingCart getByUserId(int userId)
-    {
-        // load the user's cart rows, look up each product, and build the ShoppingCart
-        return shoppingCartRepository.findByUserId(userId);
+    public ShoppingCart getByUserId(int userId) {
+        List<CartItem> cartItems = shoppingCartRepository.findByUserId(userId);
+
+        ShoppingCart cart = new ShoppingCart();
+
+        for (CartItem item : cartItems) {
+            Product product = productService.getById(item.getProductId());
+
+            ShoppingCartItem sci = new ShoppingCartItem();
+            sci.setProduct(product);
+            sci.setQuantity(item.getQuantity());
+
+            cart.add(sci);
+        }
+
+        return cart;
     }
+
+    public ShoppingCart create(int userId, int productId) {
+
+        Product product = productService.getById(productId);
+        if (product == null) {
+            throw new ProductNotFoundException("Product not found");
+        }
+
+        CartItem existing = shoppingCartRepository
+                .findByUserIdAndProductId(userId, productId);
+
+        if (existing != null) {
+            existing.setQuantity(existing.getQuantity() + 1);
+            shoppingCartRepository.save(existing);
+        } else {
+            CartItem newItem = new CartItem();
+            newItem.setUserId(userId);
+            newItem.setProductId(productId);
+            newItem.setQuantity(1);
+
+            shoppingCartRepository.save(newItem);
+        }
+
+        return getByUserId(userId);
+    }
+
 
     // add additional methods here
 }
