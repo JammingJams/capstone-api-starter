@@ -66,6 +66,16 @@ public class ShoppingCartService
         return getByUserId(userId);
     }
 
+    public boolean deleteAllProducts(int userId) {
+        List<CartItem> items = shoppingCartRepository.findByUserId(userId);
+
+        if(!items.isEmpty()){
+            shoppingCartRepository.deleteByUserId(userId);
+            return true;
+        }
+        return false;
+    }
+
 
     // add additional methods here
 }
