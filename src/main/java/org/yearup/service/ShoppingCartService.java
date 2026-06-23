@@ -1,5 +1,6 @@
 package org.yearup.service;
 
+import jakarta.transaction.Transactional;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ShoppingCartService
 {
     // a shopping cart is built from cart rows plus a product lookup for each row
@@ -62,6 +64,28 @@ public class ShoppingCartService
 
             shoppingCartRepository.save(newItem);
         }
+
+        return getByUserId(userId);
+    }
+
+    public ShoppingCart update(int userId, int productId, CartItem newItem) {
+
+        Product product = productService.getById(productId);
+
+        CartItem existing = shoppingCartRepository
+                .findByUserIdAndProductId(userId, productId);
+
+        if (product == null || existing == null) {
+            throw new ProductNotFoundException("Product not found");
+        }
+        System.out.println(newItem.getQuantity());
+        System.out.println(productService.getById(productId).getStock());
+
+        if (newItem.getQuantity() <= productService.getById(productId).getStock()) {
+            existing.setQuantity(newItem.getQuantity());
+        }
+        else {existing.setQuantity(productService.getById(productId).getStock());}
+        shoppingCartRepository.save(existing);
 
         return getByUserId(userId);
     }
