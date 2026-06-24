@@ -1,9 +1,11 @@
 package org.yearup.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.yearup.models.*;
 import org.yearup.repository.OrderLineItemRepository;
 import org.yearup.repository.OrderRepository;
+import org.yearup.repository.ProductRepository;
 import org.yearup.repository.ShoppingCartRepository;
 
 import java.time.LocalDateTime;
@@ -11,18 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderLineItemRepository orderLineItemRepository;
     private final ShoppingCartService shoppingCartService;
+    private final ProductRepository productRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductService productService;
 
-    public OrderService(OrderRepository orderRepository, OrderLineItemRepository orderLineItemRepository, ShoppingCartService shoppingCartService, ShoppingCartRepository shoppingCartRepository, ProductService productService) {
+    public OrderService(OrderRepository orderRepository, OrderLineItemRepository orderLineItemRepository, ShoppingCartService shoppingCartService, ProductRepository productRepository, ShoppingCartRepository shoppingCartRepository, ProductService productService) {
         this.orderRepository = orderRepository;
         this.orderLineItemRepository = orderLineItemRepository;
         this.shoppingCartService = shoppingCartService;
+        this.productRepository = productRepository;
         this.shoppingCartRepository = shoppingCartRepository;
         this.productService = productService;
     }
@@ -55,6 +60,9 @@ public class OrderService {
             lineItem.setProductId(product.getProductId());
             lineItem.setOrderId(order.getOrderId());
 
+            product.setStock(product.getStock() - lineItem.getQuantity());
+
+            productRepository.save(product);
             orderLineItemRepository.save(lineItem);
         }
 
