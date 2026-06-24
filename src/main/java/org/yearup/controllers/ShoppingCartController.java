@@ -13,11 +13,9 @@ import org.yearup.service.UserService;
 
 import java.security.Principal;
 
-// convert this class to a REST controller
 @RestController
 @RequestMapping("/cart")
 @CrossOrigin
-// only logged in users should have access to these actions
 @PreAuthorize("isAuthenticated()")
 public class ShoppingCartController
 {
@@ -30,13 +28,10 @@ public class ShoppingCartController
         this.userService = userService;
     }
 
-    // each method in this controller requires a Principal object as a parameter
     @GetMapping
     public ResponseEntity<ShoppingCart> getCart(Principal principal)
     {
-        // get the currently logged in username
         String userName = principal.getName();
-        // find database user by username
         User user = userService.getByUserName(userName);
         int userId = user.getId();
 
@@ -46,10 +41,6 @@ public class ShoppingCartController
         // use the shoppingCartService to get all items in the cart and return the cart
         return ResponseEntity.ok(shoppingCartService.getByUserId(userId));
     }
-
-    // add a POST method to add a product to the cart - the url should be
-    // https://localhost:8080/cart/products/15  (15 is the productId to be added)
-    // return the updated cart with status 201 Created
 
     @PostMapping("/products/{productId}")
     public ResponseEntity<ShoppingCart> addCartItemByProductId(@PathVariable int productId, Principal principal)

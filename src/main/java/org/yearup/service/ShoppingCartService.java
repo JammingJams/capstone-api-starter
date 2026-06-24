@@ -54,7 +54,9 @@ public class ShoppingCartService
                 .findByUserIdAndProductId(userId, productId);
 
         if (existing != null) {
-            existing.setQuantity(existing.getQuantity() + 1);
+            if (existing.getQuantity() < product.getStock()) {
+                existing.setQuantity(existing.getQuantity() + 1);
+            }
             shoppingCartRepository.save(existing);
         } else {
             CartItem newItem = new CartItem();
