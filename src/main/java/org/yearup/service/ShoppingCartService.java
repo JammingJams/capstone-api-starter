@@ -54,7 +54,7 @@ public class ShoppingCartService
                 .findByUserIdAndProductId(userId, productId);
 
         if (existing != null) {
-            if (existing.getQuantity() < product.getStock()) {
+            if (product.getStock() != 0) {
                 existing.setQuantity(existing.getQuantity() + 1);
             }
             shoppingCartRepository.save(existing);

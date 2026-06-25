@@ -49,6 +49,10 @@ public class OrderService {
         ShoppingCart cart = shoppingCartService.getByUserId(userId);
         List<ShoppingCartItem> cartItems = new ArrayList<>(cart.getItems().values());
 
+        if (cartItems.isEmpty()) {
+            return null;
+        }
+
         //Loops through each cart item and retrieves data to assign to the line item
         for (ShoppingCartItem item : cartItems) {
             OrderLineItem lineItem = new OrderLineItem();
