@@ -27,7 +27,7 @@ public class Product
     private String subCategory;
 
     @Column(name = "stock")
-    private int stock;
+    private Integer stock;
 
     @Column(name = "featured")
     private boolean isFeatured;
@@ -39,7 +39,7 @@ public class Product
     {
     }
 
-    public Product(int productId, String name, double price, int categoryId, String description, String subCategory, int stock, boolean isFeatured, String imageUrl)
+    public Product(int productId, String name, double price, int categoryId, String description, String subCategory, Integer stock, boolean isFeatured, String imageUrl)
     {
         this.productId = productId;
         this.name = name;
@@ -112,12 +112,12 @@ public class Product
         this.subCategory = subCategory;
     }
 
-    public int getStock()
+    public Integer getStock()
     {
         return stock;
     }
 
-    public void setStock(int stock)
+    public void setStock(Integer stock)
     {
         this.stock = stock;
     }

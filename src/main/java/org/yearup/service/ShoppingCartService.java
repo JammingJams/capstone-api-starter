@@ -1,15 +1,15 @@
 package org.yearup.service;
 
 import jakarta.transaction.Transactional;
-import org.apache.coyote.Response;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.yearup.exception.ProductNotFoundException;
-import org.yearup.models.*;
+import org.yearup.models.CartItem;
+import org.yearup.models.Product;
+import org.yearup.models.ShoppingCart;
+import org.yearup.models.ShoppingCartItem;
 import org.yearup.repository.ShoppingCartRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,20 +49,23 @@ public class ShoppingCartService
         if (product == null) {
             throw new ProductNotFoundException("Product not found");
         }
+        if (product.getStock() <= 0) {
+            throw new ProductNotFoundException("Product is out of stock");
+        }
 
         CartItem existing = shoppingCartRepository
                 .findByUserIdAndProductId(userId, productId);
 
+        int quantity = product.getStock() != 0 ? 1 : 0;
+
         if (existing != null) {
-            if (product.getStock() != 0) {
-                existing.setQuantity(existing.getQuantity() + 1);
-            }
+            existing.setQuantity(existing.getQuantity() + quantity);
             shoppingCartRepository.save(existing);
         } else {
             CartItem newItem = new CartItem();
             newItem.setUserId(userId);
             newItem.setProductId(productId);
-            newItem.setQuantity(1);
+            newItem.setQuantity(quantity);
 
             shoppingCartRepository.save(newItem);
         }

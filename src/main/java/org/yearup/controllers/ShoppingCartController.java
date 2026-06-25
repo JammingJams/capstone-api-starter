@@ -1,6 +1,5 @@
 package org.yearup.controllers;
 
-import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +18,7 @@ import java.security.Principal;
 @PreAuthorize("isAuthenticated()")
 public class ShoppingCartController
 {
-    // a shopping cart controller depends on the service layer
+
     private ShoppingCartService shoppingCartService;
     private UserService userService;
 
@@ -38,7 +37,7 @@ public class ShoppingCartController
         if (shoppingCartService.getByUserId(userId) == null) {
             return ResponseEntity.notFound().build();
         }
-        // use the shoppingCartService to get all items in the cart and return the cart
+
         return ResponseEntity.ok(shoppingCartService.getByUserId(userId));
     }
 
@@ -70,14 +69,6 @@ public class ShoppingCartController
         return ResponseEntity.ok(shoppingCartService.update(userId, productId, cartItem));
     }
 
-
-    // add a PUT method to update an existing product in the cart - the url should be
-    // https://localhost:8080/cart/products/15  (15 is the productId to be updated)
-    // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated; return the cart (200 OK)
-
-
-    // add a DELETE method to clear all products from the current users cart
-    // https://localhost:8080/cart  - return the (now empty) cart so the front end can refresh it (200 OK)
     @DeleteMapping
     public ResponseEntity<Void> deleteAllProducts(Principal principal) {
 

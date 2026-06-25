@@ -6,7 +6,6 @@ import org.yearup.models.*;
 import org.yearup.repository.OrderLineItemRepository;
 import org.yearup.repository.OrderRepository;
 import org.yearup.repository.ProductRepository;
-import org.yearup.repository.ShoppingCartRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,16 +19,12 @@ public class OrderService {
     private final OrderLineItemRepository orderLineItemRepository;
     private final ShoppingCartService shoppingCartService;
     private final ProductRepository productRepository;
-    private final ShoppingCartRepository shoppingCartRepository;
-    private final ProductService productService;
 
-    public OrderService(OrderRepository orderRepository, OrderLineItemRepository orderLineItemRepository, ShoppingCartService shoppingCartService, ProductRepository productRepository, ShoppingCartRepository shoppingCartRepository, ProductService productService) {
+    public OrderService(OrderRepository orderRepository, OrderLineItemRepository orderLineItemRepository, ShoppingCartService shoppingCartService, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.orderLineItemRepository = orderLineItemRepository;
         this.shoppingCartService = shoppingCartService;
         this.productRepository = productRepository;
-        this.shoppingCartRepository = shoppingCartRepository;
-        this.productService = productService;
     }
 
     public Order create(Profile profile, int userId) {

@@ -16,7 +16,7 @@ public class ProductService
         this.productRepository = productRepository;
     }
 
-    public List<Product> search(Integer categoryId, Double minPrice, Double maxPrice, String subCategory)
+    public List<Product> search(Integer categoryId, Double minPrice, Double maxPrice, String subCategory, Boolean isFeatured, Integer stock)
     {
         List<Product> products = categoryId != null
                 ? productRepository.findByCategoryId(categoryId)
@@ -26,7 +26,8 @@ public class ProductService
                        .filter(p -> minPrice == null || p.getPrice() >= minPrice)
                        .filter(p -> maxPrice == null || p.getPrice() <= maxPrice)
                        .filter(p -> subCategory == null || subCategory.equalsIgnoreCase(p.getSubCategory()))
-                       //.filter(Product::isFeatured)
+                       .filter(p -> isFeatured == null || p.isFeatured() == isFeatured)
+                       .filter(p -> stock == null || (stock == 1 ? p.getStock() > 0: p.getStock() == 0))
                        .toList();
     }
 
