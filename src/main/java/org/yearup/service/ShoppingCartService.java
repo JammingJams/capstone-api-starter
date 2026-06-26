@@ -56,20 +56,19 @@ public class ShoppingCartService
         CartItem existing = shoppingCartRepository
                 .findByUserIdAndProductId(userId, productId);
 
-        int quantity = product.getStock() != 0 ? 1 : 0;
 
         if (existing != null) {
+            int quantity = existing.getQuantity() >= product.getStock() ? 0 : 1;
             existing.setQuantity(existing.getQuantity() + quantity);
             shoppingCartRepository.save(existing);
         } else {
             CartItem newItem = new CartItem();
             newItem.setUserId(userId);
             newItem.setProductId(productId);
-            newItem.setQuantity(quantity);
+            newItem.setQuantity(1);
 
             shoppingCartRepository.save(newItem);
         }
-
 
         return getByUserId(userId);
     }
@@ -106,6 +105,4 @@ public class ShoppingCartService
         return false;
     }
 
-
-    // add additional methods here
 }
