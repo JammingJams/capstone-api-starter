@@ -77,6 +77,7 @@
 
 <h3>Run the application</h3>
 <code>mvn spring-boot:run</code>
+<img src="src/main/resources/picturesForReadMe/Screenshot 2026-06-25 224948.png" alt="App Screenshot">
 </div>
 
 <div class="section">
@@ -103,4 +104,10 @@ spring.jpa.hibernate.ddl-auto=update
 <div class="section">
 <h2>👤 Author</h2>
 <p>Noah Logan</p>
+</div>
+
+<div class="section">
+<h2>My favorite part of the code</h2>
+<p>This was my favorite part because I discovered that there were certain features that were missing with the products that I had to implement. And I did this part without any sort of assistance just some self reliance and alot of brute force!</p>
+<img src="src/main/resources/picturesForReadMe/Screenshot 2026-06-25 224930.png" alt="App Screenshot">
 </div>
